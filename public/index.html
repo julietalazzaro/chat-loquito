@@ -126,7 +126,7 @@
       />
       <br />
       <h2 id="name">Bienvenido</h2>
-      <h1 id="email">Al chat de Juli</h1>
+      <h1 id="email">Al chat loquito de Juli</h1>
       <br />
       <a target="_blank" href="/#" id="login">Log in al Chat</a>
       <a target="_blank" href="/#" style="display: none" id="logout"
@@ -147,14 +147,14 @@
     <script>
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
-        apiKey: "AIzaSyA9U15IhWbBu6gyk3z0W1R_9HBymuCoXCE",
-        authDomain: "crotochat-3d.firebaseapp.com",
-        databaseURL: "https://crotochat-3d.firebaseio.com",
-        projectId: "crotochat-3d",
-        storageBucket: "crotochat-3d.appspot.com",
-        messagingSenderId: "235719144853",
-        appId: "1:235719144853:web:05cc62686fa05f32f2b29c",
-        measurementId: "G-EVVEXWWBR2",
+        apiKey: "AIzaSyC3fi-aDdNXip3hfV2RvqZsIKOH54mjfbE",
+        authDomain: "chatloquito.firebaseapp.com",
+        projectId: "chatloquito",
+        databaseURL: "https://chatloquito-default-rtdb.firebaseio.com/",
+        storageBucket: "chatloquito.appspot.com",
+        messagingSenderId: "820217655865",
+        appId: "1:820217655865:web:f3de605c2d0030a57fd3e8",
+        measurementId: "G-LLSZM85CJF",
       };
 
       firebase.initializeApp(firebaseConfig);
@@ -170,6 +170,20 @@
       let mensajes = document.getElementById("mensajes");
       let mensajesContainer = document.getElementById("mensajesContainer");
 
+      document.addEventListener("DOMContentLoaded", () => {
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            usuario = { user: user };
+            lookearUsuario();
+          }
+        });
+      });
+
+      mensaje.addEventListener("keyup", (e) => {
+        if (e.keyCode === 13) {
+          pushMensaje.click();
+        }
+      });
       btt.addEventListener("click", (e) => {
         e.preventDefault();
         loguearConGoogle();
@@ -224,14 +238,6 @@
         btt.style.display = "block";
         mensajesContainer.style.display = "none";
       }
-      document.addEventListener("DOMContentLoaded", () => {
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            usuario = { user: user };
-            lookearUsuario();
-          }
-        });
-      });
       function guardarMensaje() {
         if (mensaje.value === "") return;
         const record = {
@@ -240,8 +246,8 @@
           texto: mensaje.value,
         };
 
-        const db = firebase.database();
-        const dbRef = db.ref("mensajes");
+        const db = firebase.database(); //instanciar bd firedase
+        const dbRef = db.ref("mensajes"); //referencia al arreglo en donde guardar
         const newMensaje = dbRef.push();
         newMensaje.set(record);
 
@@ -252,6 +258,7 @@
         const db = firebase.database();
         const dbRef = db.ref("mensajes");
 
+        //listener, despues de corre una vez queda escuchando
         dbRef.on("child_added", (snapshot) => {
           var item = document.createElement("li");
           item.innerHTML = `
